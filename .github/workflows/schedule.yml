@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '*/5 * * * *' # Runs every 5 minutes
 
+permissions:
+  contents: write
+
 jobs:
   update-json-files:
     runs-on: ubuntu-latest
@@ -37,6 +40,6 @@ jobs:
         git add response.json archive.json
         git commit -m "Update response and archive"
         git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/TomWhitwell/dad_poems.git
-        git remote -v
+        git remote --verbose
         git push
 
