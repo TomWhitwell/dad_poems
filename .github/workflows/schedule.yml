@@ -2,7 +2,7 @@ name: Run Script and Update Files
 
 on:
   schedule:
-    - cron: '0 * * * *' # Runs every hour, you can adjust this
+    - cron: '*/5 * * * *' # Runs every 5 minutes
 
 jobs:
   update-json-files:
