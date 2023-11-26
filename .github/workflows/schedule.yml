@@ -2,7 +2,7 @@ name: Run Script and Update Files
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Runs every 5 minutes
+    - cron: '*/2 * * * *' # Runs every 2 minutes
 
 jobs:
   update-json-files:
@@ -37,5 +37,6 @@ jobs:
         git add response.json archive.json
         git commit -m "Update response and archive"
         git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/TomWhitwell/dad_poems.git
+        git remote -v
         git push
 
