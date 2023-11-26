@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatGPT Response Display</title>
+    <script>
+        // This function will run once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch the response from the JSON file in the repository
+            fetch('response.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Replace newline characters with HTML line breaks and display the content
+                    document.getElementById('chatGptResponse').innerHTML = data.message.replace(/\n/g, '<br>');
+
+                    // Join the concepts array into a string and display
+                    if (data.concepts && data.concepts.length) {
+                        document.getElementById('concept_response').innerHTML = 'Concept: ' + data.concepts.join(', ');
+                    } else {
+                        document.getElementById('concept_response').innerHTML = 'No concepts provided.';
+                    }
+                    
+                    // Join the purpose array into a string and display
+                    if (data.purpose && data.purpose.length) {
+                        document.getElementById('purpose_response').innerHTML = 'Purpose: ' + data.purpose;
+                    } else {
+                        document.getElementById('purpose_response').innerHTML = 'No purpose provided.';
+                    }
+                    
+                    // Join the purpose array into a string and display
+                    if (data.structure && data.structure.length) {
+                        document.getElementById('structure_response').innerHTML = 'structure: ' + data.structure;
+                    } else {
+                        document.getElementById('structure_response').innerHTML = 'No purpose provided.';
+                    }
+                    
+                    // Join the purpose array into a string and display
+                    if (data.style && data.style.length) {
+                        document.getElementById('style_response').innerHTML = 'style: ' + data.style;
+                    } else {
+                        document.getElementById('style_response').innerHTML = 'No purpose provided.';
+                    }
+                    
+                })
+                .catch(error => {
+                    // Handle any errors
+                    console.error('Error fetching data: ', error);
+                    document.getElementById('chatGptResponse').textContent = 'Failed to load data.';
+                });
+        });
+    </script>
+</head>
+<body>
+    <div id="chatGptResponse">Loading...</div><p>
+    <div id="concept_response">Loading...</div>
+	<div id="purpose_response">Loading...</div>
+	<div id="structure_response">Loading...</div>
+	<div id="style_response">Loading...</div>
+
+</body>
+</html>

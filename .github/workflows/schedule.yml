@@ -1,0 +1,29 @@
+name: Run Script and Update Files
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour, you can adjust this
+
+jobs:
+  update-json-files:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # Ensure this matches your Python version
+
+    - name: Run Script
+      run: |
+        python script.py
+
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.name 'Tom Whitwell'
+        git config --global user.email 'tom.whitwell@gmail.com'
+        git add response.json archive.json
+        git commit -m "Update response and archive"
+        git push
