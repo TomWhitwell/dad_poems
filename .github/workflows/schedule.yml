@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        GH_PAT: ${{ secrets.GH_PAT }}
+        GH_PAT: ${{ secrets.PAT_2 }}
 
     steps:
     - name: Checkout Repository
@@ -36,7 +36,7 @@ jobs:
         git config --global user.email 'tom.whitwell@gmail.com'
         git add response.json archive.json
         git commit -m "Update response and archive"
-        git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/TomWhitwell/dad_poems.git
+        git remote set-url origin https://x-access-token:${{ secrets.PAT_2 }}@github.com/TomWhitwell/dad_poems.git
         git remote -v
         git push
 
