@@ -184,7 +184,7 @@ def main():
     selected_structure = random.choice(poetic_structures)
     selected_style   = random.choice(poets)
     selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
-    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + " with a one line title at the top." 
+    poem_prompt = "you are a talented poet known for being funny and uplifting. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + ", putting an surprising and positive twist on the story with a one line title at the top." 
 
 
 
