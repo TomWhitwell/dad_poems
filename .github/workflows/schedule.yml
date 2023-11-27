@@ -42,7 +42,7 @@ jobs:
       run: |
         git config --global user.name 'TomWhitwell'
         git config --global user.email 'tom.whitwell@gmail.com'
-        git add response.json archive.json
+        git add response.json archive.json response_news.json archive_news.json
         git commit -m "Update response and archive"
         git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/TomWhitwell/dad_poems.git
         git remote --verbose
