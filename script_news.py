@@ -2,6 +2,46 @@ from openai import OpenAI
 import os
 import json
 import random
+import requests
+
+GUARDIAN_KEY = os.getenv('GUARDIAN_API_KEY')  # Corrected variable access
+api_url = f"https://content.guardianapis.com/search?section=uk-news|world&show-blocks=body&api-key={GUARDIAN_KEY}"  
+
+def trim_to_words(s, num_words):
+    words = s.split()
+    return ' '.join(words[:num_words])
+
+
+def get_news_headlines(api_url):
+    try:
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            data = response.json()
+            headlines = [item['webTitle'] for item in data['response']['results']]
+            return headlines
+        else:
+            return f"Error fetching data: HTTP {response.status_code}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+def get_news_articles_and_summaries(api_url):
+    try:
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            data = response.json()
+            articles = []
+            for item in data['response']['results']:
+                title = item['webTitle']
+                body_summaries = ' '.join([block['bodyTextSummary'] for block in item.get('blocks', {}).get('body', []) if 'bodyTextSummary' in block])
+                full_content = f"{title} {body_summaries}"
+                articles.append({'content': full_content})
+            return articles
+        else:
+            return f"Error fetching data: HTTP {response.status_code}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
 
 philosophical_concepts = [
     "Existentialism", "Determinism", "Dualism", "Monism", "Nihilism", 
@@ -77,7 +117,7 @@ client = OpenAI(
     
 )
 
-def save_response_to_json(response, selected_concepts, selected_purpose, selected_structure, selected_style, filename='response.json', archive_filename='archive.json'):
+def save_response_to_json(response, selected_concepts, selected_purpose, selected_structure, selected_style, filename='response_news.json', archive_filename='archive_news.json'):
     if response and response.choices:
         # Access the content attribute of the message object
         response_content = response.choices[0].message.content.strip()
@@ -126,12 +166,15 @@ def fetch_chatgpt_response(prompt):
 
 def main():
 
+    articles_and_summaries = get_news_articles_and_summaries(api_url)
+
     n = 1
     selected_concepts = random.sample(philosophical_concepts, n)
     selected_purpose = random.choice(literature_purposes)
     selected_structure = random.choice(poetic_structures)
-    selected_style	 = random.choice(poets)
-    poem_prompt = "you are a talented poet writing for " + selected_purpose + ". Without using these words, write a " + selected_structure + ", no more than 20 words long, about " + " and/or ".join(selected_concepts) + " in the style of " + selected_style + " with a one line title at the top." 
+    selected_style   = random.choice(styles)
+    selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
+    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: " + selected_news + ". Now, without using these words, write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + " with a one line title at the top." 
 
 
 
@@ -141,6 +184,7 @@ def main():
     response = fetch_chatgpt_response(poem_prompt)
     if response:
         save_response_to_json(response, selected_concepts, selected_purpose, selected_structure, selected_style)
+
 
 if __name__ == "__main__":
     main()

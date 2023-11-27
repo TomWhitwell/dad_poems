@@ -13,6 +13,7 @@ jobs:
     env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         PAT: ${{ secrets.PAT }}
+        GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }} 
 
     steps:
     - name: Checkout Repository
@@ -32,6 +33,10 @@ jobs:
     - name: Run Script
       run: |
         python script.py
+        
+    - name: Run Additional News Script
+      run: |
+        python script_news.py
 
     - name: Commit and Push Changes
       run: |

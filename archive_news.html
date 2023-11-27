@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Poems</title>
+    <style>
+        #poemsContainer {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .poem {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc; /* Horizontal line */
+        }
+    </style>
+</head>
+<body>
+    <div id="poemsContainer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('archive_news.json')
+                .then(response => response.json())
+                .then(poems => {
+                    const container = document.getElementById('poemsContainer');
+                    poems.forEach((poem, index) => {
+                        const poemDiv = document.createElement('div');
+                        poemDiv.className = 'poem';
+                        poemDiv.innerHTML = poem.message.replace(/\n/g, '<br>');
+
+                        // Avoid adding horizontal line after the last poem
+                        if (index < poems.length - 1) {
+                            poemDiv.style.borderBottom = '1px solid black';
+                        }
+
+                        container.appendChild(poemDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching poems: ', error);
+                });
+        });
+    </script>
+</body>
+</html>

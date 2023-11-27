@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News-inspired Poem</title>
+    <script>
+        // This function will run once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch the response from the JSON file in the repository
+            fetch('response_news.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Replace newline characters with HTML line breaks and display the content
+                    document.getElementById('chatGptResponse').innerHTML = data.message.replace(/\n/g, '<br>');
+                    
+                })
+                .catch(error => {
+                    // Handle any errors
+                    console.error('Error fetching data: ', error);
+                    document.getElementById('chatGptResponse').textContent = 'Failed to load data.';
+                });
+        });
+    </script>
+</head>
+<body>
+    <div id="chatGptResponse">Loading...</div>
+
+</body>
+</html>

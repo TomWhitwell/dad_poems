@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Poem</title>
+        <meta charset="UTF-8"> <!-- Add this line -->
+
+    <style>
+        #chatGptResponse {
+            width: 100%; /* Full width of the container */
+            height: 100vh; /* Full height of the viewport */
+            overflow: hidden; /* Hide overflow */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        function adjustFontSize(container) {
+            let fontSize = 100; // Start with a large font size
+            const maxHeight = container.clientHeight;
+            const maxWidth = container.clientWidth;
+
+            container.style.fontSize = fontSize + 'px';
+
+            // Decrease font size until there's no overflow
+            while (container.scrollHeight > maxHeight || container.scrollWidth > maxWidth) {
+                fontSize--;
+                container.style.fontSize = fontSize + 'px';
+            }
+        }
+
+        function applySmartQuotes(text) {
+            return text
+                .replace(/"([^"]*)"/g, '“$1”') // Replace straight double quotes
+                .replace(/'([^']*)'/g, '‘$1’'); // Replace straight single quotes
+        }
+
+        // This function will run once the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('response_news.json')
+                .then(response => response.json())
+                .then(data => {
+                    const chatGptResponse = document.getElementById('chatGptResponse');
+                    let formattedText = data.message.replace(/\n/g, '<br>');
+                    formattedText = applySmartQuotes(formattedText);
+                    chatGptResponse.innerHTML = formattedText;
+
+                    // Adjust the font size after setting the innerHTML
+                    adjustFontSize(chatGptResponse);
+                })
+                .catch(error => {
+                    console.error('Error fetching data: ', error);
+                    document.getElementById('chatGptResponse').textContent = 'Failed to load data.';
+                });
+        });
+    </script>
+</head>
+<body>
+    <div id="chatGptResponse">Loading...</div>
+</body>
+</html>
