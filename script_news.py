@@ -77,7 +77,17 @@ poets = [
     "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Wisława Szymborska",
     "Gulzar", "Amrita Pritam", "Kamala Das", "Agha Shahid Ali", "John Berryman",
     "Nikki Giovanni", "Simon Armitage", "Tracy K. Smith", "Joy Harjo", "Louise Glück",
-    "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz"
+    "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz", 
+        "Modernism", "Postmodernism", "Surrealism", "Harlem Renaissance", "Beat Poetry",
+    "Confessional Poetry", "New Criticism", "Black Mountain Poetry", "Language Poetry", "Imagism",
+    "Futurism", "Dadaism", "Symbolism", "Vorticism", "Objectivism",
+    "Flarf Poetry", "Conceptual Poetry", "New Formalism", "Ecopoetry", "Feminist Poetry",
+    "Digital Poetry", "Spoken Word", "Performance Poetry", "Hip Hop Poetry", "Concrete Poetry",
+    "Romanticism", "Expressionism", "Acmeism", "Futurism", "Suprematism",
+    "Minimalism", "Dirty Realism", "Narrative Poetry", "L=A=N=G=U=A=G=E Poetry", "New York School",
+    "Black Arts Movement", "Martian Poetry", "Deep Image Poetry", "Neo-Romanticism", "Avant-Garde Poetry",
+    "Free Verse", "Prose Poetry", "Visual Poetry", "Sound Poetry", "Cyberpoetry",
+    "Instapoetry", "Neoclassical Poetry", "Postcolonial Poetry", "Concrete Poetry", "Fluxus"
 ]
 
 
@@ -172,9 +182,9 @@ def main():
     selected_concepts = random.sample(philosophical_concepts, n)
     selected_purpose = random.choice(literature_purposes)
     selected_structure = random.choice(poetic_structures)
-    selected_style   = random.choice(styles)
+    selected_style   = random.choice(poets)
     selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
-    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: " + selected_news + ". Now, without using these words, write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + " with a one line title at the top." 
+    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + " with a one line title at the top." 
 
 
 
