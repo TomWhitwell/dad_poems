@@ -2,7 +2,7 @@ name: Run Script and Update Files
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day at 00:00 UTC, which is midnight GMT
+    - cron: '0 * * * *' # Runs at the start of every hour
 
 permissions:
   contents: write
