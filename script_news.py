@@ -3,13 +3,19 @@ import os
 import json
 import random
 import requests
+import re
 
 GUARDIAN_KEY = os.getenv('GUARDIAN_API_KEY')  # Corrected variable access
-api_url = f"https://content.guardianapis.com/search?section=uk-news|world&show-blocks=body&api-key={GUARDIAN_KEY}"  
+api_url = f"https://content.guardianapis.com/search?section=uk-news|world&show-fields=body&page-size=30&api-key={GUARDIAN_KEY}"  
 
 def trim_to_words(s, num_words):
     words = s.split()
     return ' '.join(words[:num_words])
+    
+def strip_html_tags(text):
+    """Remove HTML tags from text."""
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
 
 
 def get_news_headlines(api_url):
@@ -32,8 +38,9 @@ def get_news_articles_and_summaries(api_url):
             articles = []
             for item in data['response']['results']:
                 title = item['webTitle']
-                body_summaries = ' '.join([block['bodyTextSummary'] for block in item.get('blocks', {}).get('body', []) if 'bodyTextSummary' in block])
-                full_content = f"{title} {body_summaries}"
+                body = item['fields']['body']  # Get just the body field
+                body = strip_html_tags(body)   # Strip HTML tags from the body
+                full_content = f"{title} {body}"
                 articles.append({'content': full_content})
             return articles
         else:
@@ -184,7 +191,7 @@ def main():
     selected_structure = random.choice(poetic_structures)
     selected_style   = random.choice(poets)
     selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
-    poem_prompt = "you are a talented poet known for being funny and uplifting. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + ", putting an surprising and positive twist on the story with a one line title at the top." 
+    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + ", putting a clever, positive unexpected and non-cynical twist on the story with a one line title at the top." 
 
 
 
