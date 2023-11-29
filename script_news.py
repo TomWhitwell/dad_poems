@@ -134,14 +134,14 @@ client = OpenAI(
     
 )
 
-def save_response_to_json(response, selected_concepts, selected_purpose, selected_structure, selected_style, filename='response_news.json', archive_filename='archive_news.json'):
+def save_response_to_json(response, prompt, selected_concepts, selected_purpose, selected_structure, selected_style, filename='response_news.json', archive_filename='archive_news.json'):
     if response and response.choices:
         # Access the content attribute of the message object
         response_content = response.choices[0].message.content.strip()
         
         # Save to the individual file
         with open(filename, 'w') as json_file:
-            json.dump({"message": response_content, "concepts": selected_concepts, "purpose": selected_purpose, "structure": selected_structure, "style": selected_style}, json_file)
+            json.dump({"message": response_content, "prompt": prompt, "concepts": selected_concepts, "purpose": selected_purpose, "structure": selected_structure, "style": selected_style}, json_file)
 
         # Update the archive file
         try:
@@ -191,7 +191,7 @@ def main():
     selected_structure = random.choice(poetic_structures)
     selected_style   = random.choice(poets)
     selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
-    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 20 words long, about the story in the style of " + selected_style + ", putting a clever, positive unexpected and non-cynical twist on the story with a one line title at the top." 
+    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 40 words long, about the story in the style of " + selected_style + ", putting a clever, unexpected and non-cynical twist on the story with a one line title at the top." 
 
 
 
@@ -200,7 +200,7 @@ def main():
     print (poem_prompt)
     response = fetch_chatgpt_response(poem_prompt)
     if response:
-        save_response_to_json(response, selected_concepts, selected_purpose, selected_structure, selected_style)
+        save_response_to_json(response, selected_news, selected_concepts, selected_purpose, selected_structure, selected_style)
 
 
 if __name__ == "__main__":
