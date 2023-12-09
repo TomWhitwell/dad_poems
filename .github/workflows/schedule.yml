@@ -2,7 +2,8 @@ name: Run Script and Update Files
 
 on:
   schedule:
-    - cron: '0 * * * *' # Runs at the start of every hour
+#    - cron: '0 * * * *' # Runs at the start of every hour
+     - cron: '*/10 * * * *' # Runs every 10 minutes
 
 permissions:
   contents: write
