@@ -36,10 +36,6 @@ jobs:
       run: |
         python script.py
         
-    - name: Run Additional News Script
-      run: |
-        python script_news.py
-
     - name: Commit and Push Changes
       run: |
         git config --global user.name 'TomWhitwell'

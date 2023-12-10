@@ -5,8 +5,8 @@ import ujson
 import os
 
 
-url = 'http://192.168.4.143:8000/response_news.json'
-# url = 'https://tomwhitwell.github.io/dad_poems/response.json'
+# url = 'http://192.168.4.143:8000/response_news.json'
+url = 'https://tomwhitwell.github.io/dad_poems/response.json'
 
 # Initialize the Badger2040
 badger = badger2040.Badger2040()
@@ -61,7 +61,8 @@ def read_wifi_config():
 def connect_wifi(ssid, psk):
     badger.clear()
     badger.set_pen(0)
-    badger.text("Connecting to WIFI", 2, 2, scale=2)
+    badger.set_font("bitmap8")
+    badger.text("Connecting...", 0, 60, scale=1)
     badger.update()
 
     wlan = network.WLAN(network.STA_IF)
@@ -69,6 +70,8 @@ def connect_wifi(ssid, psk):
     wlan.connect(ssid, psk)
     while not wlan.isconnected():
         pass
+    badger.set_pen(15)
+    badger.clear()
     return wlan
 
 # Download JSON and extract message
@@ -105,7 +108,7 @@ def extract_context(filename):
         with open(filename, 'r') as file:
             json_data = ujson.loads(file.read())
             poet = json_data.get('poet', 'Unknown poet')
-            mood = json_data.get('mood', 'unknown mood')  # Corrected from 'mode' to 'mood'
+            mood = json_data.get('mode', 'unknown mood')  
             news = json_data.get('news', 'did something unrecorded')
             return f"A poem by {poet} in a {mood} mood about:\n\n{news}"
     except OSError:
@@ -145,12 +148,14 @@ if config:
 
     if badger2040.pressed_to_wake_get_once(14):
         message = extract_context(json_filename)
-    else:
+    elif badger2040.pressed_to_wake_get_once(13):
+        import badger_os
+        badger_os.launch('examples/qrgen.py')
+    else:  
         message = extract_poem(json_filename)
 
     clean_message = remove_special_characters(message)
     formatted_message = add_line_breaks(clean_message)
-
     # Display the formatted message
     badger.set_pen(0)
     badger.set_font("bitmap8")
@@ -168,4 +173,5 @@ else:
 
 badger.led(0)
 #badger2040.turn_off()
-badger2040.sleep_for(10)
+badger2040.sleep_for(30)
+
