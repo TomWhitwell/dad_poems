@@ -6,7 +6,7 @@ import requests
 import re
 
 GUARDIAN_KEY = os.getenv('GUARDIAN_API_KEY')  # Corrected variable access
-api_url = f"https://content.guardianapis.com/search?section=uk-news|world&show-fields=body&page-size=30&api-key={GUARDIAN_KEY}"  
+api_url = f"https://content.guardianapis.com/search?section=-(football|sport|australia-news)&show-fields=body&page-size=30&api-key={GUARDIAN_KEY}"  
 
 def trim_to_words(s, num_words):
     words = s.split()
@@ -48,6 +48,28 @@ def get_news_articles_and_summaries(api_url):
     except Exception as e:
         return f"Error: {str(e)}"
 
+modes = [
+    "sceptical",
+    "celebratory",
+    "joyful",
+    "comical",
+    "melancholic",
+    "nostalgic",
+    "optimistic",
+    "pessimistic",
+    "sarcastic",
+    "sympathetic",
+    "ironic",
+    "sentimental",
+    "critical",
+    "indignant",
+    "whimsical",
+    "solemn",
+    "reflective",
+    "earnest",
+    "humorous",
+    "satirical"
+]
 
 
 philosophical_concepts = [
@@ -74,59 +96,22 @@ philosophical_concepts = [
 ]
 
 
-poets = [
-    "T.S. Eliot", "Robert Frost", "Sylvia Plath", "Langston Hughes", "Maya Angelou",
-    "Pablo Neruda", "Seamus Heaney", "W.H. Auden", "Ezra Pound", "Ted Hughes",
-    "Allen Ginsberg", "Rumi", "Derek Walcott", "Rita Dove", "Adrienne Rich",
-    "Philip Larkin", "Anne Sexton", "Elizabeth Bishop", "John Ashbery", "Billy Collins",
-    "Carol Ann Duffy", "Mary Oliver", "Sharon Olds", "Charles Bukowski", "Audre Lorde",
-    "Czesław Miłosz", "Octavio Paz", "Dylan Thomas", "Wallace Stevens", "Robert Hayden",
-    "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Wisława Szymborska",
-    "Gulzar", "Amrita Pritam", "Kamala Das", "Agha Shahid Ali", "John Berryman",
-    "Nikki Giovanni", "Simon Armitage", "Tracy K. Smith", "Joy Harjo", "Louise Glück",
-    "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz", 
-        "Modernism", "Postmodernism", "Surrealism", "Harlem Renaissance", "Beat Poetry",
-    "Confessional Poetry", "New Criticism", "Black Mountain Poetry", "Language Poetry", "Imagism",
-    "Futurism", "Dadaism", "Symbolism", "Vorticism", "Objectivism",
-    "Flarf Poetry", "Conceptual Poetry", "New Formalism", "Ecopoetry", "Feminist Poetry",
-    "Digital Poetry", "Spoken Word", "Performance Poetry", "Hip Hop Poetry", "Concrete Poetry",
-    "Romanticism", "Expressionism", "Acmeism", "Futurism", "Suprematism",
-    "Minimalism", "Dirty Realism", "Narrative Poetry", "L=A=N=G=U=A=G=E Poetry", "New York School",
-    "Black Arts Movement", "Martian Poetry", "Deep Image Poetry", "Neo-Romanticism", "Avant-Garde Poetry",
-    "Free Verse", "Prose Poetry", "Visual Poetry", "Sound Poetry", "Cyberpoetry",
-    "Instapoetry", "Neoclassical Poetry", "Postcolonial Poetry", "Concrete Poetry", "Fluxus"
-]
-
+poets = styles = [
+"T.S. Eliot", "Robert Frost", "Sylvia Plath", "Langston Hughes", "Maya Angelou", "Pablo Neruda", "Seamus Heaney", "W.H. Auden", "Ezra Pound", "Ted Hughes", "Allen Ginsberg", "Philip Larkin", "Anne Sexton", "Elizabeth Bishop", "John Ashbery", "Billy Collins", "Carol Ann Duffy", "Charles Bukowski", "Octavio Paz", "Dylan Thomas", "Wallace Stevens", "Robert Hayden", "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Simon Armitage", "Tracy K. Smith",  "Louise Glück", "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz"]
 
 styles = [
-    "Modernism", "Postmodernism", "Surrealism", "Harlem Renaissance", "Beat Poetry",
-    "Confessional Poetry", "New Criticism", "Black Mountain Poetry", "Language Poetry", "Imagism",
-    "Futurism", "Dadaism", "Symbolism", "Vorticism", "Objectivism",
-    "Flarf Poetry", "Conceptual Poetry", "New Formalism", "Ecopoetry", "Feminist Poetry",
-    "Digital Poetry", "Spoken Word", "Performance Poetry", "Hip Hop Poetry", "Concrete Poetry",
-    "Romanticism", "Expressionism", "Acmeism", "Futurism", "Suprematism",
-    "Minimalism", "Dirty Realism", "Narrative Poetry", "L=A=N=G=U=A=G=E Poetry", "New York School",
-    "Black Arts Movement", "Martian Poetry", "Deep Image Poetry", "Neo-Romanticism", "Avant-Garde Poetry",
-    "Free Verse", "Prose Poetry", "Visual Poetry", "Sound Poetry", "Cyberpoetry",
-    "Instapoetry", "Neoclassical Poetry", "Postcolonial Poetry", "Concrete Poetry", "Fluxus"
-]
-
-poetic_structures = [
-    "Free Verse", "Haiku", "Sonnet", "Villanelle", "Sestina",
-    "Limerick", "Ode", "Ghazal", "Tanka", "Ballad",
+"T.S. Eliot", "Robert Frost", "Sylvia Plath", "Langston Hughes", "Maya Angelou", "Pablo Neruda", "Seamus Heaney", "W.H. Auden", "Ezra Pound", "Ted Hughes", "Allen Ginsberg", "Philip Larkin", "Anne Sexton", "Elizabeth Bishop", "John Ashbery", "Billy Collins", "Carol Ann Duffy", "Charles Bukowski", "Octavio Paz", "Dylan Thomas", "Wallace Stevens", "Robert Hayden", "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Simon Armitage", "Tracy K. Smith",  "Louise Glück", "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz", "Modernism", "Postmodernism", "Surrealism", "Harlem Renaissance", "Beat Poetry", "Black Mountain Poetry", "Language Poetry", "Imagism", "Futurism", "Dadaism", "Symbolism", "Objectivism", "Digital Poetry", "Spoken Word", "Concrete Poetry", "Romanticism", "Expressionism", "Futurism", "Minimalism", "Dirty Realism", "Narrative Poetry", "Avant-Garde Poetry", "Free Verse", "Visual Poetry", "Cyberpoetry", "Fluxus",    "Free Verse", "Haiku", "Sonnet", "Villanelle", "Sestina", "Ode", "Ghazal", "Tanka", "Ballad",
     "Blank Verse", "Rondeau", "Pantoum", "Acrostic", "Cinquain",
     "Epigram", "Concrete Poetry", "Elegy", "Narrative Poetry", "Lyric Poetry",
-    "Prose Poetry", "Terza Rima", "Spoken Word", "Visual Poetry", "Ekphrastic Poetry"
+    "Prose Poetry", "Terza Rima", "Spoken Word", "Visual Poetry"
 ]
 
-literature_purposes = [
-    "Satire", "Spiritual Enlightenment", "Entertainment", "Education", "Cultural Commentary",
-    "Moral Instruction", "Historical Record", "Therapeutic Expression", "Social Critique", "Political Commentary",
-    "Psychological Exploration", "Philosophical Inquiry", "Artistic Expression", "Romantic Escapism", "Horror and Suspense",
-    "Mystery and Intrigue", "Science Fiction and Speculation", "Fantasy and World-Building", "Humor and Comedy", "Tragedy and Melodrama",
-    "Biographical Accounts", "Autobiographical Reflection", "Creative Experimentation", "Language Preservation", "Myth and Folklore Creation"
-]
 
+poetic_structures = [
+    "Free Verse", "Haiku", "Sonnet", "Villanelle", "Sestina", "Ode", "Ghazal", "Tanka", "Ballad",
+    "Blank Verse", "Rondeau", "Pantoum", "Acrostic", "Cinquain",
+    "Epigram", "Concrete Poetry", "Elegy", "Narrative Poetry", "Lyric Poetry",
+    "Prose Poetry", "Terza Rima", "Spoken Word", "Visual Poetry"]
 
 client = OpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")
@@ -134,14 +119,31 @@ client = OpenAI(
     
 )
 
-def save_response_to_json(response, prompt, selected_concepts, selected_purpose, selected_structure, selected_style, filename='response_news.json', archive_filename='archive_news.json'):
+def straighten_quotes(text):
+    replacements = {
+        "\u2018": "'",  # Left single quotation mark
+        "\u2019": "'",  # Right single quotation mark
+        "\u201C": '"',  # Left double quotation mark
+        "\u201D": '"',  # Right double quotation mark
+        "\u2032": "'",  # Prime (often used as apostrophe/single quote)
+        "\u2033": '"',  # Double prime (often used as double quote)
+    }
+    for find, replace in replacements.items():
+        text = text.replace(find, replace)
+    return text
+
+
+#         save_response_to_json(response, prompt, selected_news, selected_mode, selected_poem)
+
+def save_response_to_json(response, prompt, selected_news, selected_mode, selected_poet, filename='response_news.json', archive_filename='archive_news.json'):
     if response and response.choices:
         # Access the content attribute of the message object
         response_content = response.choices[0].message.content.strip()
+        response_content = straighten_quotes(response_content)
         
         # Save to the individual file
         with open(filename, 'w') as json_file:
-            json.dump({"message": response_content, "prompt": prompt, "concepts": selected_concepts, "purpose": selected_purpose, "structure": selected_structure, "style": selected_style}, json_file)
+            json.dump({"poem": response_content, "prompt": prompt, "news": selected_news, "poet": selected_poet, "mode": selected_mode}, json_file)
 
         # Update the archive file
         try:
@@ -159,8 +161,6 @@ def save_response_to_json(response, prompt, selected_concepts, selected_purpose,
         with open(archive_filename, 'w') as archive_file:
             json.dump(archive_data, archive_file)
 
-
-
 def fetch_chatgpt_response(prompt):
     try:
         chat_completion = client.chat.completions.create(
@@ -177,30 +177,29 @@ def fetch_chatgpt_response(prompt):
         print(f"Error in fetching response: {e}")
         return None
 
-
-
-
-
 def main():
 
     articles_and_summaries = get_news_articles_and_summaries(api_url)
-
-    n = 1
-    selected_concepts = random.sample(philosophical_concepts, n)
-    selected_purpose = random.choice(literature_purposes)
+    selected_concept = random.choice(philosophical_concepts)
     selected_structure = random.choice(poetic_structures)
-    selected_style   = random.choice(poets)
+    selected_style   = random.choice(styles)
+    selected_poet = random.choice(poets)
+    selected_mode = random.choice(modes)
     selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
-    poem_prompt = "you are a talented poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a " + selected_structure + ", no more than 40 words long, about the story in the style of " + selected_style + ", putting a clever, unexpected and non-cynical twist on the story with a one line title at the top." 
+#     poem_prompt=["You are a successful and innovative poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a poem, no more than 60 words long, in the style of " + selected_style + ". You add a one line title at the top.","You are a successful and innovative poet. You are studying " + selected_concept + ". Inspired, you write a poem, no more than 60 words long, in the style of " + selected_style + ". You add a one line title at the top."] 
+# 
+#     prompt = random.choice(poem_prompt)
+
+    prompt="You are the poet " + selected_poet + ". You woke up this morning feeling " + selected_mode + ". You have just read this story in the newspaper: \"" + selected_news + "\". Write a poem in YOUR OWN DISTINCTIVE STYLE, no more than 60 words long. You may add a one line title at the top if you like."
+
+#    prompt="Write a short poem about this news story: \"" + selected_news + "\". Write no more than 60 words. Adopt a strongly  " + selected_mode + " tone. You may add a one line title at the top if you like."
 
 
 
-
-
-    print (poem_prompt)
-    response = fetch_chatgpt_response(poem_prompt)
+    print (prompt)
+    response = fetch_chatgpt_response(prompt)
     if response:
-        save_response_to_json(response, selected_news, selected_concepts, selected_purpose, selected_structure, selected_style)
+        save_response_to_json(response, prompt, selected_news, selected_mode, selected_poet)
 
 
 if __name__ == "__main__":

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Daily Poem</title>
+    <title>News-inspired Poem</title>
     <script>
         // This function will run once the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function() {
             // Fetch the response from the JSON file in the repository
-            fetch('response.json')
+            fetch('response_news.json')
                 .then(response => response.json())
                 .then(data => {
                     // Replace newline characters with HTML line breaks and display the content
-                    document.getElementById('chatGptResponse').innerHTML = data.message.replace(/\n/g, '<br>');
+                    document.getElementById('chatGptResponse').innerHTML = data.poem.replace(/\n/g, '<br>');
                     
                 })
                 .catch(error => {
@@ -23,6 +23,7 @@
 </head>
 <body>
     <div id="chatGptResponse">Loading...</div>
-
+<P>
+<a href="about.html">About</a>
 </body>
 </html>
