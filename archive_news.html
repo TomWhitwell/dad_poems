@@ -26,7 +26,9 @@
                     poems.forEach((poem, index) => {
                         const poemDiv = document.createElement('div');
                         poemDiv.className = 'poem';
-                        poemDiv.innerHTML = poem.message.replace(/\n/g, '<br>');
+                        poemDiv.innerHTML = "<b>Poem number "+ poem.number + ": <br><p></b>"+ poem.poem.replace(/\n/g, '<br>') + "<br><p><small>A poem by " + poem.poet + " in a " + poem.mode + " mood about this story:<br> " + poem.news + "<br></small>";
+
+
 
                         // Avoid adding horizontal line after the last poem
                         if (index < poems.length - 1) {

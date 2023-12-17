@@ -8,6 +8,26 @@ import re
 GUARDIAN_KEY = os.getenv('GUARDIAN_API_KEY')  # Corrected variable access
 api_url = f"https://content.guardianapis.com/search?section=-(football|sport|australia-news)&show-fields=body&page-size=30&api-key={GUARDIAN_KEY}"  
 
+
+def read_number(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return int(file.read().strip())
+    except FileNotFoundError:
+        return 0
+
+def write_number(file_path, number):
+    with open(file_path, 'w') as file:
+        file.write(str(number))
+
+def increment_number(file_path):
+    number = read_number(file_path)
+    number += 1
+    write_number(file_path, number)
+    return number
+
+
+
 def trim_to_words(s, num_words):
     words = s.split()
     return ' '.join(words[:num_words])
@@ -49,7 +69,6 @@ def get_news_articles_and_summaries(api_url):
         return f"Error: {str(e)}"
 
 modes = [
-    "sceptical",
     "celebratory",
     "joyful",
     "comical",
@@ -61,15 +80,33 @@ modes = [
     "sympathetic",
     "ironic",
     "sentimental",
-    "critical",
-    "indignant",
     "whimsical",
-    "solemn",
     "reflective",
     "earnest",
     "humorous",
-    "satirical"
+    "satirical",
+    "mystical",
+    "wistful",
+    "euphoric",
+    "introspective",
+    "tranquil",
+    "yearning",
+    "passionate",
+    "contemplative",
+    "enigmatic",
+    "dreamy",
+    "exuberant",
+    "resigned",
+    "haunting",
+    "bittersweet",
+    "reverent",
+    "serene",
+    "lamenting",
+    "idyllic",
+    "philosophical"
 ]
+
+# Now, modes contains the extended list of moods
 
 
 philosophical_concepts = [
@@ -96,8 +133,12 @@ philosophical_concepts = [
 ]
 
 
-poets = styles = [
-"T.S. Eliot", "Robert Frost", "Sylvia Plath", "Langston Hughes", "Maya Angelou", "Pablo Neruda", "Seamus Heaney", "W.H. Auden", "Ezra Pound", "Ted Hughes", "Allen Ginsberg", "Philip Larkin", "Anne Sexton", "Elizabeth Bishop", "John Ashbery", "Billy Collins", "Carol Ann Duffy", "Charles Bukowski", "Octavio Paz", "Dylan Thomas", "Wallace Stevens", "Robert Hayden", "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Simon Armitage", "Tracy K. Smith",  "Louise Glück", "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz"]
+poets = [
+"T.S. Eliot", "Robert Frost", "Sylvia Plath", "Langston Hughes", "Maya Angelou", "Pablo Neruda", "Seamus Heaney", "W.H. Auden", "Ezra Pound", "Ted Hughes", "Allen Ginsberg", "Philip Larkin", "Anne Sexton", "Elizabeth Bishop", "John Ashbery", "Billy Collins", "Carol Ann Duffy", "Charles Bukowski", "Octavio Paz", "Dylan Thomas", "Wallace Stevens", "Robert Hayden", "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Simon Armitage", "Tracy K. Smith",  "Louise Glück", "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz",     "W.B. Yeats", "Rainer Maria Rilke", "Anna Akhmatova", "Adrienne Rich", "Audre Lorde", "Derek Walcott", 
+    "Rita Dove", "Mary Oliver", "Rupi Kaur", "Warsan Shire", "Amanda Gorman", "Lang Leav", "Sylvia Legris", 
+    "Jericho Brown", "Joy Harjo", "Kay Ryan", "Vikram Seth", "Arundhathi Subramaniam", "Kaveh Akbar", 
+    "Terrance Hayes", "Sarah Kay", "Claudia Rankine", "Sharon Olds", "Jack Gilbert", "Richard Blanco"
+]
 
 styles = [
 "T.S. Eliot", "Robert Frost", "Sylvia Plath", "Langston Hughes", "Maya Angelou", "Pablo Neruda", "Seamus Heaney", "W.H. Auden", "Ezra Pound", "Ted Hughes", "Allen Ginsberg", "Philip Larkin", "Anne Sexton", "Elizabeth Bishop", "John Ashbery", "Billy Collins", "Carol Ann Duffy", "Charles Bukowski", "Octavio Paz", "Dylan Thomas", "Wallace Stevens", "Robert Hayden", "Gwendolyn Brooks", "Seamus Heaney", "E.E. Cummings", "Robert Lowell", "Simon Armitage", "Tracy K. Smith",  "Louise Glück", "Ocean Vuong", "Yusef Komunyakaa", "Saeed Jones", "Dorianne Laux", "Natalie Diaz", "Modernism", "Postmodernism", "Surrealism", "Harlem Renaissance", "Beat Poetry", "Black Mountain Poetry", "Language Poetry", "Imagism", "Futurism", "Dadaism", "Symbolism", "Objectivism", "Digital Poetry", "Spoken Word", "Concrete Poetry", "Romanticism", "Expressionism", "Futurism", "Minimalism", "Dirty Realism", "Narrative Poetry", "Avant-Garde Poetry", "Free Verse", "Visual Poetry", "Cyberpoetry", "Fluxus",    "Free Verse", "Haiku", "Sonnet", "Villanelle", "Sestina", "Ode", "Ghazal", "Tanka", "Ballad",
@@ -135,7 +176,7 @@ def straighten_quotes(text):
 
 #         save_response_to_json(response, prompt, selected_news, selected_mode, selected_poem)
 
-def save_response_to_json(response, prompt, selected_news, selected_mode, selected_poet, filename='response_news.json', archive_filename='archive_news.json'):
+def save_response_to_json(response, prompt, selected_news, selected_mode, selected_poet, number, filename='response_news.json', archive_filename='archive_news.json'):
     if response and response.choices:
         # Access the content attribute of the message object
         response_content = response.choices[0].message.content.strip()
@@ -143,7 +184,7 @@ def save_response_to_json(response, prompt, selected_news, selected_mode, select
         
         # Save to the individual file
         with open(filename, 'w') as json_file:
-            json.dump({"poem": response_content, "prompt": prompt, "news": selected_news, "poet": selected_poet, "mode": selected_mode}, json_file)
+            json.dump({"poem": response_content, "prompt": prompt, "news": selected_news, "poet": selected_poet, "mode": selected_mode, "number": number}, json_file)
 
         # Update the archive file
         try:
@@ -155,7 +196,7 @@ def save_response_to_json(response, prompt, selected_news, selected_mode, select
             archive_data = []
 
         # Append the new poem to the archive
-        archive_data.insert(0, {"message": response_content})
+        archive_data.insert(0, {"poem": response_content, "prompt": prompt, "news": selected_news, "poet": selected_poet, "mode": selected_mode, "number": number})
 
         # Save the updated archive
         with open(archive_filename, 'w') as archive_file:
@@ -179,6 +220,10 @@ def fetch_chatgpt_response(prompt):
 
 def main():
 
+    new_number = increment_number("num.txt")
+    print(f"The new number is: {new_number}")
+
+
     articles_and_summaries = get_news_articles_and_summaries(api_url)
     selected_concept = random.choice(philosophical_concepts)
     selected_structure = random.choice(poetic_structures)
@@ -199,7 +244,7 @@ def main():
     print (prompt)
     response = fetch_chatgpt_response(prompt)
     if response:
-        save_response_to_json(response, prompt, selected_news, selected_mode, selected_poet)
+        save_response_to_json(response, prompt, selected_news, selected_mode, selected_poet, new_number)
 
 
 if __name__ == "__main__":
