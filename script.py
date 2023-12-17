@@ -155,7 +155,7 @@ def save_response_to_json(response, prompt, selected_news, selected_mode, select
             archive_data = []
 
         # Append the new poem to the archive
-        archive_data.append({"message": response_content})
+        archive_data.insert(0, {"message": response_content})
 
         # Save the updated archive
         with open(archive_filename, 'w') as archive_file:
