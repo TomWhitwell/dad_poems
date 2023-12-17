@@ -15,17 +15,17 @@
                     
                     
                     // Join the purpose array into a string and display
-                    if (data.structure && data.structure.length) {
-                        document.getElementById('structure_response').innerHTML = 'structure: ' + data.structure;
+                    if (data.poet && data.poet.length) {
+                        document.getElementById('poet_response').innerHTML = 'Poet: ' + data.poet;
                     } else {
-                        document.getElementById('structure_response').innerHTML = 'No purpose provided.';
+                        document.getElementById('poet_response').innerHTML = 'No poet provided.';
                     }
                     
                     // Join the purpose array into a string and display
-                    if (data.style && data.style.length) {
-                        document.getElementById('style_response').innerHTML = 'style: ' + data.style;
+                    if (data.mode && data.mode.length) {
+                        document.getElementById('mode_response').innerHTML = 'Mood: ' + data.mode;
                     } else {
-                        document.getElementById('style_response').innerHTML = 'No purpose provided.';
+                        document.getElementById('mode_response').innerHTML = 'No mood provided.';
                     }
                     
                 })
@@ -39,8 +39,8 @@
 </head>
 <body>
     <div id="chatGptResponse">Loading...</div><p>
-	<div id="structure_response">Loading...</div>
-	<div id="style_response">Loading...</div>
+	<div id="poet_response">Loading...</div>
+	<div id="mode_response">Loading...</div>
 <a href="index.html">Return</a>
 </body>
 </html>
