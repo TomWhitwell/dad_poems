@@ -2,8 +2,10 @@ name: Run Script and Update Files
 
 on:
   schedule:
-   - cron: '0 * * * *' # Runs at the start of every hour
+#    - cron: '0 * * * *' # Runs at the start of every hour
 #      - cron: '*/10 * * * *' # Runs every 10 minutes
+   - cron: 0 7-21 * * * # Run from 7am to 9pm 
+
 
 permissions:
   contents: write
@@ -40,7 +42,7 @@ jobs:
       run: |
         git config --global user.name 'TomWhitwell'
         git config --global user.email 'tom.whitwell@gmail.com'
-        git add response.json archive.json response_news.json archive_news.json
+        git add response.json archive.json response_news.json archive_news.json num.txt
         git commit -m "Update response and archive"
         git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/TomWhitwell/dad_poems.git
         git remote --verbose
