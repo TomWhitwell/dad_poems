@@ -69,41 +69,7 @@ def get_news_articles_and_summaries(api_url):
         return f"Error: {str(e)}"
 
 modes = [
-    "celebratory",
-    "joyful",
-    "comical",
-    "melancholic",
-    "nostalgic",
-    "optimistic",
-    "pessimistic",
-    "sarcastic",
-    "sympathetic",
-    "ironic",
-    "sentimental",
-    "whimsical",
-    "reflective",
-    "earnest",
-    "humorous",
-    "satirical",
-    "mystical",
-    "wistful",
-    "euphoric",
-    "introspective",
-    "tranquil",
-    "yearning",
-    "passionate",
-    "contemplative",
-    "enigmatic",
-    "dreamy",
-    "exuberant",
-    "resigned",
-    "haunting",
-    "bittersweet",
-    "reverent",
-    "serene",
-    "lamenting",
-    "idyllic",
-    "philosophical"
+    "creative"
 ]
 
 # Now, modes contains the extended list of moods
@@ -132,8 +98,7 @@ philosophical_concepts = [
     "Confucianism", "Taoism", "Buddhism", "Stoicism", "Cynicism"
 ]
 
-
-poets = [
+# poets = [
     "PG Wodehouse",
     "Homer",
     "William Wordsworth",
@@ -191,6 +156,14 @@ poets = [
     "WJ Turner", 
     "Christopher Logue", 
     "Philip Larkin"
+]
+
+
+
+poets = [
+    "Billy Collins",
+    "RS Thomas", 
+    "Simon Armitage"
 ]
 
 styles = [
