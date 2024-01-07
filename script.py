@@ -104,7 +104,8 @@ philosophical_concepts = [
 poets = [
     "Billy Collins",
     "RS Thomas", 
-    "Simon Armitage"
+    "Simon Armitage", 
+    "William Carlos Williams"
 ]
 
 styles = [
