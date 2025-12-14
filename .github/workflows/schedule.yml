@@ -4,7 +4,9 @@ on:
   schedule:
 #    - cron: '0 * * * *' # Runs at the start of every hour
 #      - cron: '*/10 * * * *' # Runs every 10 minutes
-   - cron: 0 7-21 * * * # Run from 7am to 9pm 
+#   - cron: 0 7-21 * * * # Run from 7am to 9pm 
+   cron: 0 8-20/2 * * * # run every two hours from 8am to 10pm
+
 
 
 permissions:
