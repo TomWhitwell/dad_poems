@@ -179,7 +179,7 @@ def fetch_chatgpt_response(prompt):
                     "content": prompt,
                 }
             ],
-            model="gpt-4o",
+            model="gpt-5.2",
         )
         return chat_completion
     except Exception as e:
