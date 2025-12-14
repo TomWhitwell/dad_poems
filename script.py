@@ -198,7 +198,7 @@ def main():
     selected_style   = random.choice(styles)
     selected_poet = random.choice(poets)
     selected_mode = random.choice(modes)
-    selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],75)
+    selected_news = trim_to_words(random.choice(articles_and_summaries)['content'],250)
 #     poem_prompt=["You are a successful and innovative poet. A few moments ago, you read this story in the newspaper: \"" + selected_news + "\". Inspired, you write a poem, no more than 60 words long, in the style of " + selected_style + ". You add a one line title at the top.","You are a successful and innovative poet. You are studying " + selected_concept + ". Inspired, you write a poem, no more than 60 words long, in the style of " + selected_style + ". You add a one line title at the top."] 
 # 
 #     prompt = random.choice(poem_prompt)
